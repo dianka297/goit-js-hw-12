@@ -1,36 +1,55 @@
-export const createGalleryMarkup = photos => {
-    return photos
-      .map(
-        photo => `<li class="gallery-card">
-    <a class="gallery-link" href="${photo.largeImageURL}">
-      <img
-        class="gallery-photo"
-        src="${photo.webformatURL}"
-        data-source="${photo.largeImageURL}"
-        alt="${photo.tags}"
-      />
-    </a>
-    <div class="under-img-info">
-      <ul class="list-info">
-        <li class="item-info">
-          <h3 class="title-info">Likes</h3>
-          <p class="text-info">${photo.likes}</p>
-        </li>
-        <li class="item-info">
-          <h3 class="title-info">Views</h3>
-          <p class="text-info">${photo.views}</p>
-        </li>
-        <li class="item-info">
-          <h3 class="title-info">Comments</h3>
-          <p class="text-info">${photo.comments}</p>
-        </li>
-        <li class="item-info">
-          <h3 class="title-info">Downloads</h3>
-          <p class="text-info">${photo.downloads}</p>
-        </li>
-      </ul>
-    </div>
-  </li>`
-      )
-      .join('');
-  };
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import { gallery } from '../main';
+
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionData: 'alt',
+});
+
+function renderGallery(arr) {
+  const markup = arr
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+        return `
+      <li class='gallery-item' >
+        <a href='${largeImageURL}' class="gallery-image">
+          <img src='${webformatURL}' alt='${tags} '>
+        </a>
+        <ul class="info-list">
+          <li class="info-list-item">
+            <h2 class="info-heading">Likes</h2>
+            <p class="info-text">${likes}</p>
+          </li>
+          <li class="info-list-item">
+            <h2 class="info-heading">Views</h2>
+            <p class="info-text">${views}</p>
+          </li>
+          <li class="info-list-item">
+            <h2 class="info-heading">Comments</h2>
+            <p class="info-text">${comments}</p>
+          </li>
+          <li class="info-list-item">
+            <h2 class="info-heading">Downloads</h2>
+            <p class="info-text">${downloads}</p>
+          </li>
+        </ul>
+      </li>
+      `;
+      }
+    )
+    .join('');
+
+  gallery.insertAdjacentHTML('beforeend', markup);
+
+  lightbox.refresh();
+}
+
+export default renderGallery;
